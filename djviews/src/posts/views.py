@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.views.generic import TemplateView, ListView, DetailView
-from .models import Post
+from .models import Post, Category
 
 class IndexView(ListView):
 	template_name="posts/index.html"
