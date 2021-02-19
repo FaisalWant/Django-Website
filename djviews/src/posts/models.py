@@ -62,6 +62,8 @@ class Post(models.Model):
 	slug= models.SlugField(default="slug",editable=False)
 	category=models.ForeignKey(Category, on_delete=models.CASCADE, default=1, related_name="posts")
 	tag =models.ManyToManyField(Tag, related_name= "posts",blank=True)
+	slider_post = models.BooleanField(default= False)
+
 
 	def save(self,*args,**kwargs):
 		self.slug= slugify(self.title)
