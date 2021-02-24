@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'posts'
+    'posts' , 
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,8 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static-serve")
 
 MEDIA_URL= '/media/'
 MEDIA_ROOT= os.path.join(os.path.dirname(BASE_DIR), "static-media")
+
+
+LOGOUT_REDIRECT_URL='/posts'
+
+LOGIN_REDIRECT_URL='/posts'
