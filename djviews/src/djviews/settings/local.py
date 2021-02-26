@@ -28,7 +28,7 @@ SECRET_KEY = 'lso8e)--2n1llev$^w1-z%&5=r9n18y7juc6gk!6)_f+r-_8-h'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','192.168.101.3']
+ALLOWED_HOSTS = ['127.0.0.1','192.168.101.3','172.16.1.111']
 
 
 # Application definition
@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'posts' , 
-    'users'
+    'users',
+    'crispy_forms',    #for crispy forms
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,5 @@ MEDIA_ROOT= os.path.join(os.path.dirname(BASE_DIR), "static-media")
 LOGOUT_REDIRECT_URL='/posts'
 
 LOGIN_REDIRECT_URL='/posts'
+
+CRISPY_TEMPLATE_PACK ='bootstrap4'    #for crispy-forms
