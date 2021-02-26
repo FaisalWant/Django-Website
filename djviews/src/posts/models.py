@@ -71,3 +71,7 @@ class Post(models.Model):
 
 	def __str__(self):
 		return self.title
+
+	def post_tag(self):
+
+		return ','.join(str(tag) for tag in self.tag.all())

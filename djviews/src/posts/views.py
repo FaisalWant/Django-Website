@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect
 
 # Create your views here.
-from django.views.generic import TemplateView, ListView, DetailView, CreateView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView
 from .models import Post, Category, Tag
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import PostCreationForm
+from .forms import PostCreationForm, PostUpdateForm
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 
@@ -98,4 +99,44 @@ class CreatePostView(CreateView):
 				form.instance.tag.add(existed_tag)
 
 		return super(CreatePostView, self).form_valid(form)
+
+
+
+@method_decorator(login_required(login_url='users/login'), name='dispatch')
+class UpdatePostView(UpdateView):
+	model=Post 
+	template_name= 'posts/post-update.html'
+	form_class= PostUpdateForm
+
+	def get_success_url(self):
+		return reverse('detail',kwargs={"pk":self.object.pk, "slug":self.object.slug})
+
+
+	def form_valid(self, form):
+		form.instance.user= self.request.user
+		form.instance.tag.clear()
+		tags=self.request.POST.get("tag").split(",")
+		for tag in tags:
+			current_tag=Tag.objects.filter(slug=slugify(tag))
+			if current_tag.count()<1:
+				create_tag= Tag.objects.create(title=tag)
+				form.instance.tag.add(create_tag)
+
+
+			else:
+				existed_tag= Tag.objects.get(slug=slugify(tag))
+				form.instance.tag.add(existed_tag)
+
+		return super(UpdatePostView, self).form_valid(form)
+
+	def get(self, request, *args, **kwargs):
+		self.object= self.get_object()
+
+		if self.object.user != request.user:
+			return HttpResponseRedirect('/')
+
+
+		return super(UpdatePostView, self).get(request, *args, **kwargs)
+
+
 

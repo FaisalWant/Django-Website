@@ -24,7 +24,7 @@ class PostCreationForm(forms.ModelForm):
 		]
 # adding crispy forms for the post 
 class PostUpdateForm(forms.ModelForm):
-	def __init__(self, args,**kwargs):
+	def __init__(self, *args,**kwargs):
 		super(PostUpdateForm, self).__init__(*args, **kwargs)
 		self.helper= FormHelper()
 		self.helper.form_method='post'
@@ -34,9 +34,22 @@ class PostUpdateForm(forms.ModelForm):
 			Field("category", css_class="single-input"), 
 			Field("content", css_class="single-input", placeholder="Your Content"), 
 			Field("image", css_class="single-input"),
-			Field("tag", css_class="single-input", placeholder="Your Tags"),  
+			Field("tag", css_class="single-input", placeholder="Your Tags", value=self.instance.post_tag()),  
 
 			)
+
+		self.helper.add_input(Submit('submit', 'Update', css_class="genric-btn success circle"))
+
+	tag= forms.CharField()
+	class  Meta:
+		model=Post 
+		fields =[
+			'title',
+			'category',
+			'content',
+			'image'
+
+	]
 
 
 
