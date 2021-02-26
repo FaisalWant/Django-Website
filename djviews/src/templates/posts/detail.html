@@ -48,9 +48,12 @@
        						</div>
        						<p> {{ single.content }}</p>
                             {% if single.user == request.user %}
+
                             <a href="{% url 'post_update' single.pk single.slug %}" class= "genric-btn info circle">Update</a>
 
-                            <a href="{% url 'post_update' single.pk single.slug %}" class= "genric-btn danger circle">Delete</a>
+                            <a href="{% url 'post_delete' single.pk single.slug %}" class= "genric-btn danger circle">Delete</a>
+                            
+
                             {% endif %}
 
       						<div class="news_d_footer">

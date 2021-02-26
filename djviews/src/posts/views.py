@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 
 # Create your views here.
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post, Category, Tag
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -140,3 +140,25 @@ class UpdatePostView(UpdateView):
 
 
 
+class DeletePostView(DeleteView):
+	model= Post 
+	success_url ='/'
+	template_name='posts/delete.html'
+
+	def delete(self, request, *args, **kwargs):
+		self.object= self.get_object()
+		if self.object.user == request.user:
+			self.object.delete()
+			return HttpResponseRedirect(self.success_url)
+
+
+		else:
+			return HttpResponseRedirect(self.success_url)
+
+
+	def get(self, request, *args, **kwargs):
+		self.object= self.get_object()
+		if self.object.user != request.user:
+			return HttpResponseRedirect('/')
+
+		return super(DeletePostView, self).get(request, *args, **kwargs)
