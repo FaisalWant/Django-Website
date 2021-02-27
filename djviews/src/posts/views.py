@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import PostCreationForm, PostUpdateForm
 from django.template.defaultfilters import slugify
 from django.urls import reverse
+from django.db.models import F
 
 
 
@@ -34,6 +35,9 @@ class PostDetail(DetailView):
 		context= super(PostDetail, self).get_context_data(**kwargs)
 		return context
 
+	def get(self, request, *args, **kwargs):#hit count for a blog
+		self.hit= Post.objects.filter(id= self.kwargs['pk']).update(hit=F('hit')+1)
+		return super(PostDetail,self).get(request,*args, **kwargs)
 
 
 

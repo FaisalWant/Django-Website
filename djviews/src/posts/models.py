@@ -63,6 +63,7 @@ class Post(models.Model):
 	category=models.ForeignKey(Category, on_delete=models.CASCADE, default=1, related_name="posts")
 	tag =models.ManyToManyField(Tag, related_name= "posts",blank=True)
 	slider_post = models.BooleanField(default= False)
+	hit = models.PositiveIntegerField(default= 0)
 
 
 	def save(self,*args,**kwargs):
