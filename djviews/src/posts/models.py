@@ -87,3 +87,6 @@ class Comment(models.Model):
 	email=models.EmailField(max_length=100)
 	content= models.TextField()
 	publishing_date= models.DateField(auto_now_add=True)
+
+	def __str__(self):
+		return self.post.title
