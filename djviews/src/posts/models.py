@@ -65,6 +65,9 @@ class Post(models.Model):
 	slider_post = models.BooleanField(default= False)
 	hit = models.PositiveIntegerField(default= 0)
 
+	def comment_count(self):
+		return self.comments.all().count()
+
 
 	def save(self,*args,**kwargs):
 		self.slug= slugify(self.title)
