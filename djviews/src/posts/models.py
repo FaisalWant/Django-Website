@@ -76,3 +76,14 @@ class Post(models.Model):
 	def post_tag(self):
 
 		return ','.join(str(tag) for tag in self.tag.all())
+
+
+#----------------------------------------------
+
+
+class Comment(models.Model):
+	post= models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+	name=models.CharField(max_length=100)
+	email=models.EmailField(max_length=100)
+	content= models.TextField()
+	publishing_date= models.DateField(auto_now_add=True)
