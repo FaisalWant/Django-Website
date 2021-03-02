@@ -6,10 +6,11 @@ from django.views.generic import TemplateView, ListView, DetailView, CreateView,
 from .models import Post, Category, Tag
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from .forms import PostCreationForm, PostUpdateForm
+from .forms import PostCreationForm, PostUpdateForm, CreateCommentForm
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.db.models import F, Q
+from django.views.generic.edit import FormMixin
 
 
 
@@ -29,20 +30,40 @@ class IndexView(ListView):
 
 
 
-class PostDetail(DetailView):
+class PostDetail(DetailView, FormMixin):
 	template_name="posts/detail.html"
 	model= Post
 	context_object_name="single"
+	form_class= CreateCommentForm
 
 	def get_context_data(self, **kwargs):
 		context= super(PostDetail, self).get_context_data(**kwargs)
 		context['previous']= Post.objects.filter(id__lt=self.kwargs['pk']).order_by('-pk').first()
 		context['next']= Post.objects.filter(id__gt=self.kwargs['pk']).order_by('pk').first()
+		context['form']=self.get_form()
 		return context
 
 	def get(self, request, *args, **kwargs):#hit count for a blog
 		self.hit= Post.objects.filter(id= self.kwargs['pk']).update(hit=F('hit')+1)
 		return super(PostDetail,self).get(request,*args, **kwargs)
+
+
+	def form_valid(self, form):
+		form.instance.post= self.object
+		form.save()
+		return super(PostDetail, self).form_valid(form)
+
+	def post(self, *args, **kwargs):
+		self.object= self.get_object()
+		form= self.get_form()
+		if form.is_valid():
+			return self.form_valid(form)
+
+		else:
+			return self.form_valid(form)
+
+	def get_success_url(self):
+		return reverse('detail', kwargs={"pk":self.object.pk,"slug":self.object.slug})
 
 
 
